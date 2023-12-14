@@ -1,5 +1,7 @@
 import Hero from 'components/Hero'
 
-export default function About () {
-  return <Hero />
+const Blog = () => {
+  return <Hero title='Blog' subtitle='Recent Posts' />
 }
+
+export default Blog
