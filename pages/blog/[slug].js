@@ -1,4 +1,4 @@
-import { getPostBySlug } from 'lib/api'
+import { getPostBySlug, getAllSlugs } from 'lib/api'
 import extractText from 'lib/extract-text'
 import Meta from 'components/meta'
 import Container from 'components/container'
@@ -67,8 +67,10 @@ const Post = ({
 }
 
 const getStaticPaths = async () => {
+  const allslugs = await getAllSlugs()
+
   return {
-    paths: ['/blog/schedule', '/blog/music', '/blog/micro'],
+    paths: allslugs.map(({ slug }) => `/blog/${slug}`),
     fallback: false
   }
 }
@@ -88,7 +90,6 @@ const getStaticProps = async ({ params }) => {
   const eyecatch = post.eyecatch ?? eyecatchLocal
 
   const { base64 } = await getPlaiceholder(eyecatch.url)
-  console.log('Base64 Blur Data:', base64)
   eyecatch.blurDataURL = base64
 
   return {
