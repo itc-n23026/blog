@@ -16,7 +16,7 @@ import { getPlaiceholder } from 'plaiceholder'
 
 import { eyecatchLocal } from 'lib/constants'
 
-const Schedule = ({
+const Post = ({
   title,
   publish,
   content,
@@ -66,16 +66,29 @@ const Schedule = ({
   )
 }
 
-const getStaticProps = async () => {
-  const slug = 'micro'
+const getStaticPaths = async () => {
+  return {
+    paths: ['/blog/schedule', '/blog/music', '/blog/micro'],
+    fallback: false
+  }
+}
 
+const getStaticProps = async ({ params }) => {
+  const { slug } = params
   const post = await getPostBySlug(slug)
+
+  if (!post) {
+    return {
+      notFound: true
+    }
+  }
 
   const description = extractText(post.content)
 
   const eyecatch = post.eyecatch ?? eyecatchLocal
 
   const { base64 } = await getPlaiceholder(eyecatch.url)
+  console.log('Base64 Blur Data:', base64)
   eyecatch.blurDataURL = base64
 
   return {
@@ -90,5 +103,6 @@ const getStaticProps = async () => {
   }
 }
 
+export { getStaticPaths }
 export { getStaticProps }
-export default Schedule
+export default Post
